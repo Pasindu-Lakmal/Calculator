@@ -2,6 +2,7 @@ class Calculator {
   constructor(previosOperandTextElement, currentOperandTextElement) {
     this.previosOperandTextElement = previosOperandTextElement;
     this.currentOperandTextElement = currentOperandTextElement;
+    this.clear();
   }
 
   clear() {
@@ -13,8 +14,7 @@ class Calculator {
   delete() {}
 
   appendNumber(number) {
-    // this.currentOperand = this.currentOperand.toString() + number.toString();
-    this.currentOperand = number;
+    this.currentOperand = this.currentOperand.toString() + number.toString();
   }
 
   chooseOperation(operation) {}
