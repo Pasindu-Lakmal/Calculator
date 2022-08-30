@@ -14,15 +14,26 @@ class Calculator {
   delete() {}
 
   appendNumber(number) {
+    if (number === "." && this.currentOperand.includes(".")) return;
     this.currentOperand = this.currentOperand.toString() + number.toString();
   }
 
-  chooseOperation(operation) {}
+  chooseOperation(operation) {
+    if (this.currentOperand === "") return;
+    if (this.previosOperand !== "") {
+      this.compute();
+    }
+    this.operation = operation;
+    this.previosOperand = this.currentOperand;
+    this.currentOperand = "";
+  }
 
   compute() {}
 
   updateDisplay() {
     this.currentOperandTextElement.innerText = this.currentOperand;
+    this.previosOperandTextElement.innerText =
+      this.previosOperand.toString() + this.operation.toString();
   }
 }
 const numberButtons = document.querySelectorAll("[data-number]");
@@ -45,6 +56,13 @@ const calculator = new Calculator(
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
     calculator.appendNumber(button.innerText);
+    calculator.updateDisplay();
+  });
+});
+
+operationButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    calculator.chooseOperation(button.innerText);
     calculator.updateDisplay();
   });
 });
