@@ -57,8 +57,22 @@ class Calculator {
     this.previosOperand = "";
   }
   getDisplayNumber(number) {
-    const floatNumber = parseFloat(number);
-    return number;
+    const stringNumber = number.toString();
+    const integerDigits = parseFloat(stringNumber.split("."[0]));
+    const decimalDigits = stringNumber.split(".")[1];
+    let integerdisplay;
+    if (isNaN(integerDigits)) {
+      integerdisplay = "";
+    } else {
+      integerdisplay = integerDigits.toLocaleString("en", {
+        maximumFractionDigits: 0,
+      });
+    }
+    if (decimalDigits != null) {
+      return `${integerdisplay}.${decimalDigits}`;
+    } else {
+      return integerdisplay;
+    }
   }
 
   updateDisplay() {
