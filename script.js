@@ -11,7 +11,9 @@ class Calculator {
     this.operation = undefined;
   }
 
-  delete() {}
+  delete() {
+    this.currentOperand = this.currentOperand.toString().slice(0, -1);
+  }
 
   appendNumber(number) {
     if (number === "." && this.currentOperand.includes(".")) return;
@@ -51,21 +53,46 @@ class Calculator {
         return;
     }
     this.currentOperand = computation;
-    this.operation = "";
+    this.operation = undefined;
     this.previosOperand = "";
+  }
+  getDisplayNumber(number) {
+    const stringNumber = number.toString();
+    const integerDigits = parseFloat(stringNumber.split("."[0]));
+    const decimalDigits = stringNumber.split(".")[1];
+    let integerdisplay;
+    if (isNaN(integerDigits)) {
+      integerdisplay = "";
+    } else {
+      integerdisplay = integerDigits.toLocaleString("en", {
+        maximumFractionDigits: 0,
+      });
+    }
+    if (decimalDigits != null) {
+      return `${integerdisplay}.${decimalDigits}`;
+    } else {
+      return integerdisplay;
+    }
   }
 
   updateDisplay() {
-    this.currentOperandTextElement.innerText = this.currentOperand;
-    this.previosOperandTextElement.innerText =
-      this.previosOperand.toString() + this.operation.toString();
+    this.currentOperandTextElement.innerText = this.getDisplayNumber(
+      this.currentOperand
+    );
+    if (this.operation != null) {
+      this.previosOperandTextElement.innerText = `${this.getDisplayNumber(
+        this.previosOperand
+      )} ${this.operation}`;
+    } else {
+      this.previosOperandTextElement.innerText = this.previosOperand;
+    }
   }
 }
 const numberButtons = document.querySelectorAll("[data-number]");
 const operationButtons = document.querySelectorAll("[data-operation]");
 const equalsButton = document.querySelector("[data-equals]");
 const deleteButton = document.querySelector("[data-delete]");
-const allClearButton = document.querySelector("[all-data-clear]");
+const allClearButton = document.querySelector("[data-all-clear]");
 const previosOperandTextElement = document.querySelector(
   "[data-previous-operand]"
 );
@@ -94,5 +121,15 @@ operationButtons.forEach((button) => {
 
 equalsButton.addEventListener("click", (button) => {
   calculator.compute();
+  calculator.updateDisplay();
+});
+
+allClearButton.addEventListener("click", (button) => {
+  calculator.clear();
+  calculator.updateDisplay();
+});
+
+deleteButton.addEventListener("click", (button) => {
+  calculator.delete();
   calculator.updateDisplay();
 });
